@@ -1,12 +1,27 @@
-import { MainWindow } from './App.styles'
+import { useEffect, useState } from "react";
+import { MainWindow } from "./App.styles";
+
+const API_URL =
+  "https://raw.githubusercontent.com/fserb/pt-br/master/palavras";
 
 function App() {
+  const [targetWord, setTargetWord] = useState("");
 
-  return (
-    <MainWindow>
-      Hello World
-    </MainWindow>
-  )
+  useEffect(() => {
+    const fetchWord = async () => {
+      const response = await fetch(API_URL);
+      console.log(response);
+      const words = (await response.text())
+        .split("\n")
+        .filter((word) => word.length == 5 && !word.includes("-") && !word.includes("."));
+
+      setTargetWord(words[Math.floor(Math.random() * words.length)]);
+    };
+
+    fetchWord();
+  }, []);
+
+  return <MainWindow>{targetWord}</MainWindow>;
 }
 
-export default App
+export default App;
