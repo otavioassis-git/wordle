@@ -53,6 +53,9 @@ function Board({ words, allWords }: BoardProps) {
       if (key === "Backspace") {
         setCurrentGuess((oldGuess) => oldGuess.slice(0, -1));
       } else if (key === "Enter" && currentGuess.length === 5) {
+        if (!allWords.includes(currentGuess)) {
+          setOpenSnackbar(true);
+        } else {
           const currentGuessIndex = guesses.findIndex((guess) => !guess.word);
           guesses.map((guess, guessIdx) => {
             if (guessIdx === currentGuessIndex) {
@@ -63,6 +66,7 @@ function Board({ words, allWords }: BoardProps) {
           setGuesses(guesses);
           setCurrentGuess("");
           checkGameOver(guesses);
+        }
       } else if (currentGuess.length === 5 || key === "Enter") {
         return;
       } else {
