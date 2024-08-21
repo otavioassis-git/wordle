@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { BoardContainer } from "./Board.styles";
 import Line from "../Line/Line";
+import { GameOver } from "../../App";
 
 interface BoardProps {
   target: string;
+  setGameOver: (gameOver: GameOver) => void;
 }
 
 export interface Guess {
@@ -11,7 +13,7 @@ export interface Guess {
   colors: string[];
 }
 
-function Board({ target }: BoardProps) {
+function Board({ target, setGameOver }: BoardProps) {
   const [guesses, setGuesses] = useState<Guess[]>([]);
   const [currentGuess, setCurrentGuess] = useState<string>("");
 
@@ -40,6 +42,7 @@ function Board({ target }: BoardProps) {
         });
         setGuesses(guesses);
         setCurrentGuess("");
+        checkGameOver(guesses);
       } else if (currentGuess.length === 5 || key === "Enter") {
         return;
       } else {
@@ -68,6 +71,28 @@ function Board({ target }: BoardProps) {
       }
     }
     return guess;
+  }
+
+  function checkGameOver(guesses: Guess[]) {
+    const nextGuessIndex = guesses.findIndex((guess) => !guess.word);
+    if (nextGuessIndex < 0) {
+      setGameOver({
+        isOver: true,
+        win: guesses[guesses.length - 1].colors.every(
+          (color) =>
+            guesses[guesses.length - 1].colors[0] == color && color == "green"
+        ),
+      });
+    } else {
+      const win = guesses[nextGuessIndex - 1].colors.every(
+        (color) =>
+          guesses[nextGuessIndex - 1].colors[0] == color && color == "green"
+      );
+      setGameOver({
+        isOver: win,
+        win,
+      });
+    }
   }
 
   return (

@@ -10,7 +10,7 @@ export const MainWindow = styled((props: BoxProps) => (
       justifyContent: "space-between",
       height: "100dvh",
       width: "100dvw",
-      p: 2
+      p: 2,
     }}
     {...props}
   />
@@ -18,4 +18,17 @@ export const MainWindow = styled((props: BoxProps) => (
 
 export const Title = styled((props: TypographyProps) => (
   <Typography variant="h3" fontWeight="bold" {...props} />
+))``;
+
+export const Footer = styled((props: BoxProps) => (
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: 2,
+    }}
+    {...props}
+  />
 ))``;
