@@ -48,6 +48,7 @@ function Board({ words, allWords }: BoardProps) {
     }
 
     function handleType(key: string) {
+      if (gameOver.isOver) return;
       if (key === "Backspace") {
         setCurrentGuess((oldGuess) => oldGuess.slice(0, -1));
       } else if (key === "Enter" && currentGuess.length === 5) {
