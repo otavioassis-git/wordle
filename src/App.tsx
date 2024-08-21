@@ -13,7 +13,7 @@ export interface GameOver {
 
 function App() {
   const [words, setWords] = useState<string[]>([]);
-  const [allWords, setAllWords] = useState<string[]>([])
+  const [allWords, setAllWords] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -33,17 +33,19 @@ function App() {
     const fetchAllWords = async () => {
       const response = await fetch(API_URL2);
       const words = (await response.text())
-        .split('\n')
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .split("\n")
         .filter(
           (word: string) =>
             word.length == 5 && !word.includes("-") && !word.includes(".")
         );
 
       setAllWords(words);
-    }
+    };
 
     fetchWords();
-    fetchAllWords()
+    fetchAllWords();
   }, []);
 
   return (
