@@ -23,6 +23,7 @@ function Board({ words }: BoardProps) {
   });
 
   useEffect(() => {
+    prompt()
     setTargetWord(words[Math.floor(Math.random() * words.length)]);
   }, [words]);
 
