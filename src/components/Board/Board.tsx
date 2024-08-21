@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { BoardContainer } from "./Board.styles";
+import { BoardContainer, Footer } from "./Board.styles";
 import Line from "../Line/Line";
 import { GameOver } from "../../App";
+import { Button, Typography } from "@mui/material";
 
 interface BoardProps {
-  target: string;
-  setGameOver: (gameOver: GameOver) => void;
+  words: string[];
 }
 
 export interface Guess {
@@ -13,9 +13,18 @@ export interface Guess {
   colors: string[];
 }
 
-function Board({ target, setGameOver }: BoardProps) {
+function Board({ words }: BoardProps) {
+  const [targetWord, setTargetWord] = useState("");
   const [guesses, setGuesses] = useState<Guess[]>([]);
   const [currentGuess, setCurrentGuess] = useState<string>("");
+  const [gameOver, setGameOver] = useState<GameOver>({
+    isOver: false,
+    win: false,
+  });
+
+  useEffect(() => {
+    setTargetWord(words[Math.floor(Math.random() * words.length)]);
+  }, [words]);
 
   useEffect(() => {
     if (guesses.length === 0) {
@@ -56,9 +65,9 @@ function Board({ target, setGameOver }: BoardProps) {
   }, [guesses, currentGuess]);
 
   function colorLetters(guess: Guess): Guess {
-    let aux = target.toString();
+    let aux = targetWord.toString();
     for (let i = 0; i < guess.word.length; i++) {
-      if (target[i] === guess.word[i]) {
+      if (targetWord[i] === guess.word[i]) {
         guess.colors[i] = "green";
         aux = aux.substring(0, i) + " " + aux.substring(i + 1);
       } else {
@@ -95,17 +104,48 @@ function Board({ target, setGameOver }: BoardProps) {
     }
   }
 
+  function handleRestart() {
+    setTargetWord(words[Math.floor(Math.random() * words.length)]);
+    setCurrentGuess("");
+    let newGuesses: Guess[] = [];
+    for (let i = 0; i < 6; i++) {
+      newGuesses = [
+        ...newGuesses,
+        { word: "", colors: Array(5).fill("white") },
+      ];
+    }
+    setGuesses(newGuesses);
+    setGameOver({
+      isOver: false,
+      win: false,
+    });
+  }
+
   return (
-    <BoardContainer>
-      {guesses.map((guess, guessIdx) => {
-        if (guesses.findIndex((guess) => !guess.word) == guessIdx) {
-          return (
-            <Line key={guessIdx} guess={{ word: currentGuess, colors: [] }} />
-          );
-        }
-        return <Line key={guessIdx} guess={guess} />;
-      })}
-    </BoardContainer>
+    <>
+      <BoardContainer>
+        {guesses.map((guess, guessIdx) => {
+          if (guesses.findIndex((guess) => !guess.word) == guessIdx) {
+            return (
+              <Line key={guessIdx} guess={{ word: currentGuess, colors: [] }} />
+            );
+          }
+          return <Line key={guessIdx} guess={guess} />;
+        })}
+      </BoardContainer>
+      <Footer>
+        {gameOver.isOver && (
+          <>
+            {!gameOver.win && (
+              <Typography variant="h5">{targetWord}</Typography>
+            )}
+            <Button variant="contained" size="large" onClick={handleRestart}>
+              Restart
+            </Button>
+          </>
+        )}
+      </Footer>
+    </>
   );
 }
 
