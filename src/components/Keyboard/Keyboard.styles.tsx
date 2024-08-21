@@ -6,11 +6,10 @@ import enterIcon from "../../assets/enter.svg";
 export const KeyboardContainer = styled((props: BoxProps) => (
   <Box
     sx={{
-      display: { sm: "flex", md: "none" },
+      display: "flex",
       flexDirection: "column",
       alignItems: "center",
       gap: 1,
-      mt: "auto",
     }}
     {...props}
   />

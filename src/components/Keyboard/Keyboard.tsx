@@ -7,10 +7,11 @@ const keys = [
 ];
 
 interface KeyboardProps {
+  wrongLetters: string[]
   setKeyboardPress: (key: string) => void;
 }
 
-function Keyboard({ setKeyboardPress }: KeyboardProps) {
+function Keyboard({ wrongLetters, setKeyboardPress }: KeyboardProps) {
   return (
     <KeyboardContainer>
       {keys.map((keyRow, keyRowIdx) => (
@@ -19,7 +20,7 @@ function Keyboard({ setKeyboardPress }: KeyboardProps) {
             <Key
               key={keyIdx}
               value={key}
-              color="lightgray"
+              color={wrongLetters.includes(key) ? 'gray' : 'lightgray'}
               onClick={() => setKeyboardPress(key)}
             />
           ))}

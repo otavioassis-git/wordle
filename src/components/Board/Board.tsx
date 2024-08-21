@@ -25,6 +25,7 @@ function Board({ words, allWords }: BoardProps) {
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [keyboardPress, setKeyboardPress] = useState("");
+  const [wrongLetters, setWrongLetters] = useState<string[]>([]);
 
   useEffect(() => {
     setTargetWord(words[Math.floor(Math.random() * words.length)]);
@@ -52,9 +53,6 @@ function Board({ words, allWords }: BoardProps) {
       if (key === "Backspace") {
         setCurrentGuess((oldGuess) => oldGuess.slice(0, -1));
       } else if (key === "Enter" && currentGuess.length === 5) {
-        if (!allWords.includes(currentGuess)) {
-          setOpenSnackbar(true);
-        } else {
           const currentGuessIndex = guesses.findIndex((guess) => !guess.word);
           guesses.map((guess, guessIdx) => {
             if (guessIdx === currentGuessIndex) {
@@ -65,7 +63,6 @@ function Board({ words, allWords }: BoardProps) {
           setGuesses(guesses);
           setCurrentGuess("");
           checkGameOver(guesses);
-        }
       } else if (currentGuess.length === 5 || key === "Enter") {
         return;
       } else {
@@ -95,6 +92,11 @@ function Board({ words, allWords }: BoardProps) {
     for (let i = 0; i < guess.word.length; i++) {
       if (aux.includes(guess.word[i]) && aux[i] != " ") {
         guess.colors[i] = "orange";
+      } else if (guess.colors[i] !== "green") {
+        setWrongLetters((oldWrongLetters) => [
+          ...oldWrongLetters,
+          guess.word[i],
+        ]);
       }
     }
     return guess;
@@ -137,6 +139,7 @@ function Board({ words, allWords }: BoardProps) {
       isOver: false,
       win: false,
     });
+    setWrongLetters([])
   }
 
   return (
@@ -161,19 +164,20 @@ function Board({ words, allWords }: BoardProps) {
           return <Line key={guessIdx} guess={guess} />;
         })}
       </BoardContainer>
-      {!gameOver.isOver && <Keyboard setKeyboardPress={setKeyboardPress} />}
-      <Footer>
-        {gameOver.isOver && (
-          <>
-            {!gameOver.win && (
-              <Typography variant="h5">{targetWord}</Typography>
-            )}
-            <Button variant="contained" size="large" onClick={handleRestart}>
-              Restart
-            </Button>
-          </>
-        )}
-      </Footer>
+      {!gameOver.isOver && (
+        <Keyboard
+          wrongLetters={wrongLetters}
+          setKeyboardPress={setKeyboardPress}
+        />
+      )}
+      {gameOver.isOver && (
+        <Footer>
+          {!gameOver.win && <Typography variant="h5">{targetWord}</Typography>}
+          <Button variant="contained" size="large" onClick={handleRestart}>
+            Restart
+          </Button>
+        </Footer>
+      )}
     </>
   );
 }
