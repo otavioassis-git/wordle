@@ -10,10 +10,9 @@ export interface GameOver {
   win: boolean;
 }
 
-
 function App() {
   const [words, setWords] = useState<string[]>([]);
-  
+
   useEffect(() => {
     const fetchWord = async () => {
       const response = await fetch(API_URL);
@@ -26,7 +25,7 @@ function App() {
             word.length == 5 && !word.includes("-") && !word.includes(".")
         );
 
-        setWords(words);
+      setWords(words);
     };
 
     fetchWord();
