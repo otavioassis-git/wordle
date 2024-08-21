@@ -6,17 +6,25 @@ import enterIcon from "../../assets/enter.svg";
 export const KeyboardContainer = styled((props: BoxProps) => (
   <Box
     sx={{
-      display: "flex",
+      display: { sm: "flex", md: "none" },
       flexDirection: "column",
       alignItems: "center",
       gap: 1,
+      mt: "auto",
     }}
     {...props}
   />
 ))``;
 
-export const Line = styled((props: BoxProps) => (
-  <Box sx={{ display: "flex", gap: 1 }} {...props} />
+interface LineProps extends BoxProps {
+  idx: number;
+}
+
+export const Line = styled((props: LineProps) => (
+  <Box
+    sx={{ display: "flex", gap: 1, ml: props.idx === 2 ? 1 : 0 }}
+    {...props}
+  />
 ))``;
 
 export const Key = styled(

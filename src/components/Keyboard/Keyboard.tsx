@@ -14,7 +14,7 @@ function Keyboard({ setKeyboardPress }: KeyboardProps) {
   return (
     <KeyboardContainer>
       {keys.map((keyRow, keyRowIdx) => (
-        <Line key={keyRowIdx}>
+        <Line idx={keyRowIdx} key={keyRowIdx}>
           {keyRow.split(",").map((key, keyIdx) => (
             <Key
               key={keyIdx}
