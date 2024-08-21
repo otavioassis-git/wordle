@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { BoardContainer, Footer } from "./Board.styles";
 import Line from "../Line/Line";
 import { GameOver } from "../../App";
-import { Button, Typography } from "@mui/material";
+import { Alert, Button, Snackbar, Typography } from "@mui/material";
 
 interface BoardProps {
   words: string[];
+  allWords: string[]
 }
 
 export interface Guess {
@@ -13,7 +14,7 @@ export interface Guess {
   colors: string[];
 }
 
-function Board({ words }: BoardProps) {
+function Board({ words, allWords }: BoardProps) {
   const [targetWord, setTargetWord] = useState("");
   const [guesses, setGuesses] = useState<Guess[]>([]);
   const [currentGuess, setCurrentGuess] = useState<string>("");
@@ -21,6 +22,7 @@ function Board({ words }: BoardProps) {
     isOver: false,
     win: false,
   });
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     setTargetWord(words[Math.floor(Math.random() * words.length)]);
@@ -42,16 +44,20 @@ function Board({ words }: BoardProps) {
       if (key === "Backspace") {
         setCurrentGuess((oldGuess) => oldGuess.slice(0, -1));
       } else if (key === "Enter" && currentGuess.length === 5) {
-        const currentGuessIndex = guesses.findIndex((guess) => !guess.word);
-        guesses.map((guess, guessIdx) => {
-          if (guessIdx === currentGuessIndex) {
-            guess.word = currentGuess;
-            guess = colorLetters(guess);
-          }
-        });
-        setGuesses(guesses);
-        setCurrentGuess("");
-        checkGameOver(guesses);
+        if (!allWords.includes(currentGuess)) {
+          setOpenSnackbar(true);
+        } else {
+          const currentGuessIndex = guesses.findIndex((guess) => !guess.word);
+          guesses.map((guess, guessIdx) => {
+            if (guessIdx === currentGuessIndex) {
+              guess.word = currentGuess;
+              guess = colorLetters(guess);
+            }
+          });
+          setGuesses(guesses);
+          setCurrentGuess("");
+          checkGameOver(guesses);
+        }
       } else if (currentGuess.length === 5 || key === "Enter") {
         return;
       } else {
@@ -123,6 +129,16 @@ function Board({ words }: BoardProps) {
 
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        open={openSnackbar}
+        autoHideDuration={1000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert severity="error" variant="filled" sx={{ width: "100%" }}>
+          Invalid word
+        </Alert>
+      </Snackbar>
       <BoardContainer>
         {guesses.map((guess, guessIdx) => {
           if (guesses.findIndex((guess) => !guess.word) == guessIdx) {
