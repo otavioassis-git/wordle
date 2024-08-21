@@ -12,6 +12,8 @@ function App() {
     const fetchWord = async () => {
       const response = await fetch(API_URL);
       const words = (await response.text())
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
         .split('"')
         .filter(
           (word) =>
