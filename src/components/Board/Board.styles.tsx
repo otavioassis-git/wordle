@@ -13,7 +13,6 @@ export const Footer = styled((props: BoxProps) => (
       alignItems: "center",
       justifyContent: "space-between",
       gap: 2,
-      height: '92px'
     }}
     {...props}
   />

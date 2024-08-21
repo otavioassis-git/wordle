@@ -3,10 +3,11 @@ import { BoardContainer, Footer } from "./Board.styles";
 import Line from "../Line/Line";
 import { GameOver } from "../../App";
 import { Alert, Button, Snackbar, Typography } from "@mui/material";
+import Keyboard from "../Keyboard/Keyboard";
 
 interface BoardProps {
   words: string[];
-  allWords: string[]
+  allWords: string[];
 }
 
 export interface Guess {
@@ -23,6 +24,7 @@ function Board({ words, allWords }: BoardProps) {
     win: false,
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [keyboardPress, setKeyboardPress] = useState("");
 
   useEffect(() => {
     setTargetWord(words[Math.floor(Math.random() * words.length)]);
@@ -38,9 +40,14 @@ function Board({ words, allWords }: BoardProps) {
       }
     }
 
-    function handleType(event: KeyboardEvent) {
-      const key = event.key;
+    if (keyboardPress) {
+      setKeyboardPress((oldKey) => {
+        handleType(oldKey);
+        return "";
+      });
+    }
 
+    function handleType(key: string) {
       if (key === "Backspace") {
         setCurrentGuess((oldGuess) => oldGuess.slice(0, -1));
       } else if (key === "Enter" && currentGuess.length === 5) {
@@ -65,10 +72,14 @@ function Board({ words, allWords }: BoardProps) {
       }
     }
 
-    window.addEventListener("keyup", handleType);
+    function handleTypeEvent(event: KeyboardEvent) {
+      handleType(event.key);
+    }
 
-    return () => window.removeEventListener("keyup", handleType);
-  }, [guesses, currentGuess]);
+    window.addEventListener("keyup", handleTypeEvent);
+
+    return () => window.removeEventListener("keyup", handleTypeEvent);
+  }, [guesses, currentGuess, keyboardPress]);
 
   function colorLetters(guess: Guess): Guess {
     let aux = targetWord.toString();
@@ -149,6 +160,7 @@ function Board({ words, allWords }: BoardProps) {
           return <Line key={guessIdx} guess={guess} />;
         })}
       </BoardContainer>
+      {!gameOver.isOver && <Keyboard setKeyboardPress={setKeyboardPress} />}
       <Footer>
         {gameOver.isOver && (
           <>
