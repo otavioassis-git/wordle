@@ -53,7 +53,7 @@ function Board({ words, allWords }: BoardProps) {
       if (key === "Backspace") {
         setCurrentGuess((oldGuess) => oldGuess.slice(0, -1));
       } else if (key === "Enter" && currentGuess.length === 5) {
-        if (!allWords.includes(currentGuess)) {
+        if (![...allWords, ...words].includes(currentGuess)) {
           setOpenSnackbar(true);
         } else {
           const currentGuessIndex = guesses.findIndex((guess) => !guess.word);
