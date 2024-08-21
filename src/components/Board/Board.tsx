@@ -25,6 +25,7 @@ function Board({ words, allWords }: BoardProps) {
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [keyboardPress, setKeyboardPress] = useState("");
+  const [correctLetters, setCorrectLetters] = useState<string[]>([]);
   const [wrongLetters, setWrongLetters] = useState<string[]>([]);
 
   useEffect(() => {
@@ -87,6 +88,10 @@ function Board({ words, allWords }: BoardProps) {
     let aux = targetWord.toString();
     for (let i = 0; i < guess.word.length; i++) {
       if (targetWord[i] === guess.word[i]) {
+        setCorrectLetters((oldCorrectLetters) => [
+          ...oldCorrectLetters,
+          guess.word[i],
+        ]);
         guess.colors[i] = "green";
         aux = aux.substring(0, i) + " " + aux.substring(i + 1);
       } else {
@@ -96,7 +101,10 @@ function Board({ words, allWords }: BoardProps) {
     for (let i = 0; i < guess.word.length; i++) {
       if (aux.includes(guess.word[i]) && aux[i] != " ") {
         guess.colors[i] = "orange";
-      } else if (guess.colors[i] !== "green") {
+      } else if (
+        guess.colors[i] !== "green" &&
+        !correctLetters.includes(guess.word[i])
+      ) {
         setWrongLetters((oldWrongLetters) => [
           ...oldWrongLetters,
           guess.word[i],
@@ -143,7 +151,7 @@ function Board({ words, allWords }: BoardProps) {
       isOver: false,
       win: false,
     });
-    setWrongLetters([])
+    setWrongLetters([]);
   }
 
   return (
