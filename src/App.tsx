@@ -10,6 +10,7 @@ export interface GameOver {
   win: boolean;
 }
 
+
 function App() {
   const [words, setWords] = useState<string[]>([]);
   
