@@ -21,6 +21,7 @@ function App() {
       const words = (await response.text())
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
         .split('"')
         .filter(
           (word: string) =>
@@ -35,6 +36,7 @@ function App() {
       const words = (await response.text())
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
         .split("\n")
         .filter(
           (word: string) =>
