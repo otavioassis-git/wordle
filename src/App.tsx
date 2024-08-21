@@ -10,7 +10,6 @@ function App() {
   useEffect(() => {
     const fetchWord = async () => {
       const response = await fetch(API_URL);
-      console.log(response);
       const words = (await response.text())
         .split("\n")
         .filter(
@@ -18,7 +17,7 @@ function App() {
             word.length == 5 && !word.includes("-") && !word.includes(".")
         );
 
-      setTargetWord(words[Math.floor(Math.random() * words.length)]);
+      setTargetWord('vadio');
     };
 
     fetchWord();
@@ -28,7 +27,7 @@ function App() {
     <MainWindow>
       <Title>Wordle</Title>
       <Board target={targetWord} />
-      <div></div>
+      <div>{targetWord}</div>
     </MainWindow>
   );
 }

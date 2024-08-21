@@ -35,6 +35,7 @@ function Board({ target }: BoardProps) {
         guesses.map((guess, guessIdx) => {
           if (guessIdx === currentGuessIndex) {
             guess.word = currentGuess;
+            guess = colorLetters(guess);
           }
         });
         setGuesses(guesses);
@@ -51,7 +52,23 @@ function Board({ target }: BoardProps) {
     return () => window.removeEventListener("keyup", handleType);
   }, [guesses, currentGuess]);
 
-  
+  function colorLetters(guess: Guess): Guess {
+    let aux = target.toString();
+    for (let i = 0; i < guess.word.length; i++) {
+      if (target[i] === guess.word[i]) {
+        guess.colors[i] = "green";
+        aux = aux.substring(0, i) + " " + aux.substring(i + 1);
+      } else {
+        guess.colors[i] = "lightgray";
+      }
+    }
+    for (let i = 0; i < guess.word.length; i++) {
+      if (aux.includes(guess.word[i]) && aux[i] != " ") {
+        guess.colors[i] = "orange";
+      }
+    }
+    return guess;
+  }
 
   return (
     <BoardContainer>
