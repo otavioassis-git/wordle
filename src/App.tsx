@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { MainWindow } from "./App.styles";
+import { MainWindow, Title } from "./App.styles";
+import Board from "./components/Board/Board";
 
 const API_URL =
   "https://raw.githubusercontent.com/fserb/pt-br/master/palavras";
@@ -21,7 +22,11 @@ function App() {
     fetchWord();
   }, []);
 
-  return <MainWindow>{targetWord}</MainWindow>;
+  return <MainWindow>
+    <Title>Wordle</Title>
+    <Board />
+    <div></div>
+  </MainWindow>;
 }
 
 export default App;
