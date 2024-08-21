@@ -7,7 +7,7 @@ function Line({ guess }: { guess: Guess }) {
       {Array(5)
         .fill(null)
         .map((_, index) => (
-          <Letter key={index} value={guess.word[index]} />
+          <Letter key={index} value={guess.word[index]} color={guess.colors[index]} />
         ))}
     </LineContainer>
   );

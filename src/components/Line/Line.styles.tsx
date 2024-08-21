@@ -11,7 +11,7 @@ export const LineContainer = styled((props: BoxProps) => (
   />
 ))``;
 
-export const Letter = styled(({ value }: { value: string }) => (
+export const Letter = styled(({ value, color }: { value: string, color: string }) => (
   <Box
     sx={{
       display: "flex",
@@ -21,6 +21,7 @@ export const Letter = styled(({ value }: { value: string }) => (
       width: "50px",
       border: "1px solid",
       borderRadius: 2,
+      bgcolor: color
     }}
   >
     <Typography variant="h6" textTransform="capitalize">
